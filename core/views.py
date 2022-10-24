@@ -71,6 +71,7 @@ def cadastro(request):
         novouser.save()
         
         return render(request, 'cadastro.html', messages.success(request, f'Seja bem-vindo {str(nome_user)}!'))
+    return render(request, 'cadastro.html')
 
 
 @require_POST
@@ -84,7 +85,8 @@ def logar(request):
         login(request, user)
         return HttpResponseRedirect('', messages.success(request, f'Bem-vindo novamente, {str(user.username)}'))
     else:
-        return render(request, 'login.html', messages.error(request, 'Usuário ou senha incorretos!'))
+         messages.error(request, 'Usuário ou senha incorretos!')
+    return render(request, 'login.html')
 
 
 @login_required
