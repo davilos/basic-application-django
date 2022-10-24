@@ -42,12 +42,3 @@ class Cadastro(Base):
 
     def __str__(self) -> str:
         return self.nomeuser
-
-
-class Logar(Base):
-    nomeuser = models.CharField('Nome', max_length=100)
-    email = models.EmailField('E-mail')
-    senha = models.CharField('Senha', max_length=50)
-
-    def __str__(self) -> str:
-        return self.nomeuser
