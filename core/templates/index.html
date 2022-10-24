@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="{% static 'css/styles.css'%}">
 </head>
 <body>
+    <a class="btn btn-primary btn-lg" href="https://app-django2-dt.herokuapp.com/logar/" role="button">Fazer login</a>
+    <a class="btn btn-primary btn-lg" href="https://app-django2-dt.herokuapp.com/cadastro/" role="button">Cadastrar</a>
     <div class="container">
         {% if produtos %}
         <h1>Produtos</h1>
@@ -52,8 +54,6 @@
             <h2>Ainda não existem produtos cadastrados. :(</h2>
         {% endif %}
     </div>
-    <a class="btn btn-primary btn-lg" href="https://app-django2-dt.herokuapp.com/logar/" role="button"></a>
-    <a class="btn btn-primary btn-lg" href="https://app-django2-dt.herokuapp.com/cadastro/" role="button"></a>
 {% bootstrap_javascript jquery='full' %}
 </body>
 </html>
