@@ -1,5 +1,4 @@
 {% load bootstrap4 %}
-{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -22,10 +21,8 @@
                 <input class="form-control mt-4" type="password" name="password" id="password" placeholder="Digite a senha:">
                 <input class="form-control mt-4" type="password" name="password-conf" id="password-conf" placeholder="Digite a senha novamente:">
                 <input class="form-control mt-4" type="email" name="email" id="email" placeholder="Digite o e-mail:">
+                <input type="submit" class="btn btn-primary" value="Cadastrar">
 
-                {% buttons %}
-                    <button type="submit" class="btn btn-primary">Cadastrar</button>
-                {% endbuttons %}
             </div>
         </form>
     </div>
