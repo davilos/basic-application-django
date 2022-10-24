@@ -58,20 +58,22 @@ def cadastro(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('')
     try:
-        user_aux = User.objects.get(email=request.POST['campo-email'])
+        user_aux = User.objects.get(email=request.POST['email'])
 
         if user_aux:
             return render(request, 'cadastro.html', messages.error(request, 'Já existe um usuário com este e-mail!'))
     except User.DoesNotExist:
-        nome_user = request.POST['campo-nome-user']
-        email = request.POST['campo-email']
-        senha = request.POST['campo-senha']
+        if request.POST['password'] == request.POST['password-conf']:
+            nome_user = request.POST['user']
+            email = request.POST['email']
+            senha = request.POST['password']
 
-        novouser = User.objects.create_user(username=nome_user, email=email, password=senha)
-        novouser.save()
-        
-        return render(request, 'cadastro.html', messages.success(request, f'Seja bem-vindo {str(nome_user)}!'))
-    return render(request, 'cadastro.html')
+            novouser = User.objects.create_user(username=nome_user, email=email, password=senha)
+            novouser.save()
+            
+            return render(request, 'cadastro.html', messages.success(request, f'Seja bem-vindo {str(nome_user)}!'))
+        else:
+            return render(request, 'cadastro.html', messages.error(request, 'As senha não são iguais!'))
 
 
 @require_POST
@@ -79,14 +81,13 @@ def logar(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('')
     user_aux = User.objects.get(email=request.POST['email'])
-    user = authenticate(username=user_aux.username, password=request.POST['senha'])
+    user = authenticate(username=user_aux.username, password=request.POST['password'])
 
     if user is not None:
         login(request, user)
         return HttpResponseRedirect('', messages.success(request, f'Bem-vindo novamente, {str(user.username)}'))
     else:
-         messages.error(request, 'Usuário ou senha incorretos!')
-    return render(request, 'login.html')
+         return render(request, 'login.html', messages.error(request, 'Usuário ou senha incorretos!'))
 
 
 @login_required
