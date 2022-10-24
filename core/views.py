@@ -64,14 +64,10 @@ def cadastro(request):
             return render(request, 'cadastro.html', messages.error(request, 'Já existe um usuário com este e-mail!'))
     except User.DoesNotExist:
         if request.POST['password'] == request.POST['password-conf']:
-            nome_user = request.POST['user']
-            email = request.POST['email']
-            senha = request.POST['password']
-
-            novouser = User.objects.create_user(username=nome_user, email=email, password=senha)
-            novouser.save()
+            user = User.objects.create_user(request.POST['user'], request.POST['email'], request.POST['password'])
+            user.save()
             
-            return render(request, 'cadastro.html', messages.success(request, f'Seja bem-vindo {str(nome_user)}!'))
+            return render(request, 'cadastro.html', messages.success(request, f'Seja bem-vindo {user.username}!'))
         else:
             return render(request, 'cadastro.html', messages.error(request, 'As senha não são iguais!'))
 
