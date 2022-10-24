@@ -69,6 +69,7 @@ def cadastro(request):
             return render(request, 'cadastro.html', messages.success(request, f'Seja bem-vindo {user.username}!'))
         else:
             return render(request, 'cadastro.html', messages.error(request, 'As senha não são iguais!'))
+    return render(request, 'cadastro.html')
 
 
 def logar(request):
