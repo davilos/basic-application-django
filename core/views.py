@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .forms import ContatoForm, ProdutoModelForm
+from .forms import ContatoForm, ProdutoModelForm, CadastroModelForm
 from django.contrib import messages
 from .models import Produto
 from django.shortcuts import redirect
@@ -46,3 +46,22 @@ def produto(request):
         return render(request, 'produto.html', context)
     else:
         return redirect('index')
+
+
+def cadastro(request):
+    if str(request.method) == 'POST':
+        form = CadastroModelForm(request.POST)
+
+        if form.is_valid():
+            print(form)
+
+            messages.success(request, 'Cadastro realizado!')
+
+            form = CadastroModelForm()
+        else:
+            messages.error(request, 'Erro ao relizar o cadastro.')
+    else:
+        form = CadastroModelForm()
+    
+    context = {'form': form}
+    return render(request, 'cadastro.html', context)

@@ -33,3 +33,11 @@ def produto_pre_save(signal, instance, sender, **kwargs):
 
 
 signals.pre_save.connect(produto_pre_save, sender=Produto)
+
+
+class Cadastro(Base):
+    email = models.EmailField('E-mail')
+    senha = models.CharField('Senha', max_length=40)
+
+    def __str__(self) -> str:
+        return self.email
