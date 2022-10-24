@@ -3,7 +3,7 @@ from .forms import ContatoForm, ProdutoModelForm
 from django.contrib import messages
 from .models import Produto
 from django.shortcuts import redirect
-from django.views.decorators.http import require_POST
+# from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
@@ -53,7 +53,6 @@ def produto(request):
         return redirect('index')
 
 
-@require_POST
 def cadastro(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('')
@@ -72,7 +71,6 @@ def cadastro(request):
             return render(request, 'cadastro.html', messages.error(request, 'As senha não são iguais!'))
 
 
-@require_POST
 def logar(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('')
