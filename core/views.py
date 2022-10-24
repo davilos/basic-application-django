@@ -1,8 +1,13 @@
 from django.shortcuts import render
-from .forms import ContatoForm, ProdutoModelForm, CadastroModelForm
+from .forms import ContatoForm, ProdutoModelForm
 from django.contrib import messages
 from .models import Produto
 from django.shortcuts import redirect
+from django.views.decorators.http import require_POST
+from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):
@@ -48,20 +53,41 @@ def produto(request):
         return redirect('index')
 
 
+@require_POST
 def cadastro(request):
-    if str(request.method) == 'POST':
-        form = CadastroModelForm(request.POST)
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('')
+    try:
+        user_aux = User.objects.get(email=request.POST['campo-email'])
 
-        if form.is_valid():
-            print(form)
+        if user_aux:
+            return render(request, 'cadastro.html', messages.error(request, 'Já existe um usuário com este e-mail!'))
+    except User.DoesNotExist:
+        nome_user = request.POST['campo-nome-user']
+        email = request.POST['campo-email']
+        senha = request.POST['campo-senha']
 
-            messages.success(request, 'Cadastro realizado!')
+        novouser = User.objects.create_user(username=nome_user, email=email, password=senha)
+        novouser.save()
+        
+        return render(request, 'cadastro.html', messages.success(request, f'Seja bem-vindo {str(nome_user)}!'))
 
-            form = CadastroModelForm()
-        else:
-            messages.error(request, 'Erro ao relizar o cadastro.')
+
+@require_POST
+def logar(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('')
+    user_aux = User.objects.get(email=request.POST['email'])
+    user = authenticate(username=user_aux.username, password=request.POST['senha'])
+
+    if user is not None:
+        login(request, user)
+        return HttpResponseRedirect('', messages.success(request, f'Bem-vindo novamente, {str(user.username)}'))
     else:
-        form = CadastroModelForm()
-    
-    context = {'form': form}
-    return render(request, 'cadastro.html', context)
+        return render(request, 'login.html', messages.error(request, 'Usuário ou senha incorretos!'))
+
+
+@login_required
+def sair(request):
+    logout(request)
+    return HttpResponseRedirect('')
