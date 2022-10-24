@@ -72,16 +72,15 @@ def cadastro(request):
             return render(request, 'cadastro.html', messages.error(request, 'As senha não são iguais!'))
 
 
-@require_POST
 def logar(request):
     # if request.user.is_authenticated:
     #     return HttpResponseRedirect('')
-    user_aux = User.objects.get(email=request.POST['email'])
-    user = authenticate(username=user_aux.username, password=request.POST['password'])
-
+    # user_aux = User.objects.get(email=request.POST['email'])
+    # user = authenticate(username=user_aux.username, password=request.POST['password'])
+    return render(request, 'login.html')
     # if user is not None:
-    login(request, user)
-    return HttpResponseRedirect('', messages.success(request, f'Bem-vindo novamente, {str(user.username)}'))
+    # login(request, user)
+    # return HttpResponseRedirect('', messages.success(request, f'Bem-vindo novamente, {str(user.username)}'))
     # else:
     #      return render(request, 'login.html', messages.error(request, 'Usuário ou senha incorretos!'))
 
