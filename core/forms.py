@@ -1,6 +1,6 @@
 from django import forms
 from django.core.mail.message import EmailMessage
-from .models import Produto, Cadastro
+from .models import Produto
 
 
 class ContatoForm(forms.Form):
