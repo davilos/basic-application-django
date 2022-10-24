@@ -51,12 +51,16 @@
         {% else %}
             <h2>Ainda não existem produtos cadastrados. :(</h2>
         {% endif %}
-        <a href="https://app-django2-dt.herokuapp.com/logar/">
+    <div class="header--gap-auth-button--7KoL0">
+        <a data-purpose="header-login" href="https://app-django2-dt.herokuapp.com/logar/" class="udlite-btn udlite-btn-medium udlite-btn-secondary udlite-heading-sm">
             <span>Fazer login</span>
         </a>
-        <a href="https://app-django2-dt.herokuapp.com/cadastro/">
+    </div>
+    <div class="header--gap-auth-button--7KoL0">
+        <a data-purpose="header-signup" href="https://app-django2-dt.herokuapp.com/cadastro/" class="udlite-btn udlite-btn-medium udlite-btn-primary udlite-heading-sm">
             <span>Cadastre-se</span>
         </a>
+    </div>
 {% bootstrap_javascript jquery='full' %}
 </body>
 </html>

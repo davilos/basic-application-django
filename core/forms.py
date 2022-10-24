@@ -1,6 +1,6 @@
 from django import forms
 from django.core.mail.message import EmailMessage
-from .models import Produto
+from .models import Produto, Cadastro, Logar
 
 
 class ContatoForm(forms.Form):
@@ -35,3 +35,17 @@ class ProdutoModelForm(forms.ModelForm):
     class Meta:
         model = Produto
         fields = ['nome', 'preco', 'estoque', 'imagem']
+
+
+class CadastroModelForm(forms.ModelForm):
+    senha = forms.CharField(widget=forms.PasswordInput)
+    class Meta:
+        model = Cadastro
+        fields = ['nomeuser', 'email', 'senha']
+
+
+class LogarModelForm(forms.ModelForm):
+    senha = forms.CharField(widget=forms.PasswordInput)
+    class Meta:
+        model = Cadastro
+        fields = ['nomeuser', 'email', 'senha']

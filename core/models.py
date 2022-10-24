@@ -33,3 +33,21 @@ def produto_pre_save(signal, instance, sender, **kwargs):
 
 
 signals.pre_save.connect(produto_pre_save, sender=Produto)
+
+
+class Cadastro(Base):
+    nomeuser = models.CharField('Nome', max_length=100)
+    email = models.EmailField('E-mail')
+    senha = models.CharField('Senha', max_length=50)
+
+    def __str__(self) -> str:
+        return self.nomeuser
+
+
+class Logar(Base):
+    nomeuser = models.CharField('Nome', max_length=100)
+    email = models.EmailField('E-mail')
+    senha = models.CharField('Senha', max_length=50)
+
+    def __str__(self) -> str:
+        return self.nomeuser
