@@ -3,7 +3,7 @@ from .forms import ContatoForm, ProdutoModelForm
 from django.contrib import messages
 from .models import Produto
 from django.shortcuts import redirect
-# from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
@@ -53,28 +53,29 @@ def produto(request):
         return redirect('index')
 
 
+@require_POST
 def cadastro(request):
-    if request.user.is_authenticated:
-        return HttpResponseRedirect('')
+    # if request.user.is_authenticated:
+    #     return HttpResponseRedirect('')
     try:
         user_aux = User.objects.get(email=request.POST['email'])
 
         if user_aux:
             return render(request, 'cadastro.html', messages.error(request, 'Já existe um usuário com este e-mail!'))
     except User.DoesNotExist:
-        if request.POST['password'] == request.POST['password-conf']:
+        if (request.POST['password'] == request.POST['password-conf']):
             user = User.objects.create_user(request.POST['user'], request.POST['email'], request.POST['password'])
             user.save()
             
             return render(request, 'cadastro.html', messages.success(request, f'Seja bem-vindo {user.username}!'))
         else:
             return render(request, 'cadastro.html', messages.error(request, 'As senha não são iguais!'))
-    return render(request, 'cadastro.html')
 
 
+@require_POST
 def logar(request):
-    if request.user.is_authenticated:
-        return HttpResponseRedirect('')
+    # if request.user.is_authenticated:
+    #     return HttpResponseRedirect('')
     user_aux = User.objects.get(email=request.POST['email'])
     user = authenticate(username=user_aux.username, password=request.POST['password'])
 
