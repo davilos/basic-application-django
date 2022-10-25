@@ -77,11 +77,13 @@ def logar(request):
     user_aux = User.objects.get(email=request.POST['email'])
     user = authenticate(username=user_aux.username, password=request.POST['password'])
 
-    if user is not None:
-        login(request, user)
-        return redirect('index', messages.success(request, f'Bem-vindo novamente, {str(user.username)}'))
-    else:
-         return render(request, 'login.html', messages.error(request, 'Usuário ou senha incorretos!'))
+    context = {'user': user} 
+    return render(request, 'login.html', context)
+    # if user is not None:
+    #     login(request, user)
+    #     return redirect('index', messages.success(request, f'Bem-vindo novamente, {str(user.username)}'))
+    # else:
+    #      return render(request, 'login.html', messages.error(request, 'Usuário ou senha incorretos!'))
 
 
 @login_required
