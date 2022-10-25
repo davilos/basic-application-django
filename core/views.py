@@ -5,7 +5,6 @@ from .models import Produto
 from django.shortcuts import redirect
 from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
@@ -55,8 +54,9 @@ def produto(request):
 
 @require_POST
 def cadastro(request):
-    # if request.user.is_authenticated:
-    #     return HttpResponseRedirect('')
+    print(request)
+    if request.user.is_authenticated:
+        return redirect('index', messages.warning(request, 'Você já está cadastrado!'))
     try:
         user_aux = User.objects.get(email=request.POST['email'])
 
@@ -72,20 +72,21 @@ def cadastro(request):
             return render(request, 'cadastro.html', messages.error(request, 'As senha não são iguais!'))
 
 
+@require_POST
 def logar(request):
-    # if request.user.is_authenticated:
-    #     return HttpResponseRedirect('')
-    # user_aux = User.objects.get(email=request.POST['email'])
-    # user = authenticate(username=user_aux.username, password=request.POST['password'])
-    return render(request, 'login.html')
-    # if user is not None:
-    # login(request, user)
-    # return HttpResponseRedirect('', messages.success(request, f'Bem-vindo novamente, {str(user.username)}'))
-    # else:
-    #      return render(request, 'login.html', messages.error(request, 'Usuário ou senha incorretos!'))
+    if request.user.is_authenticated:
+        return redirect('index', messages.warning(request, 'Você já está logado!'))
+    user_aux = User.objects.get(email=request.POST['email'])
+    user = authenticate(username=user_aux.username, password=request.POST['password'])
+
+    if user is not None:
+        login(request, user)
+        return redirect('index', messages.success(request, f'Bem-vindo novamente, {str(user.username)}'))
+    else:
+         return render(request, 'login.html', messages.error(request, 'Usuário ou senha incorretos!'))
 
 
 @login_required
 def sair(request):
     logout(request)
-    return HttpResponseRedirect('')
+    return redirect('index')
