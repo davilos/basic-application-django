@@ -9,23 +9,26 @@
     {% bootstrap_css %}
 </head>
 <body>
-    <div class="container">
-        <h1>Cadastro</h1>
-        {% bootstrap_messages %}
-
-        <form name="form-users" id="formUsers" action="cadastro/" method="post" class="form" autocomplete="off" enctype="multipart/form-data">
+    {% block content %}
+        <form name="form-users" id="formUsers" action="/cadastro-conf/" method="post" autocomplete="off">
             <div class="col-6 mt-4 m-auto">
+                {% if msg %}
+                    <div class="alert {{ class }}">
+                        {{ msg }}
+                    </div>
+                {% endif %}
+
                 {% csrf_token %}
                 
+                <h1>Cadastro</h1>
                 <input class="form-control mt-4" type="text" name="user" id="user" placeholder="Nome de usuário:">
-                <input class="form-control mt-4" type="password" name="password" id="password" placeholder="Digite a senha:">
-                <input class="form-control mt-4" type="password" name="password-conf" id="password-conf" placeholder="Digite a senha novamente:">
                 <input class="form-control mt-4" type="email" name="email" id="email" placeholder="Digite o e-mail:">
-                <input type="submit" class="btn btn-primary" value="Cadastrar">
-
+                <input class="form-control mt-4" type="password" name="password" id="password" placeholder="Digite a senha:">
+                <input class="form-control mt-4" type="password" name="password-conf" id="password-conf" placeholder="Confirme a senha:">
+                <input class="btn btn-primary mt-4" type="submit" value="Cadastrar">
             </div>
         </form>
-    </div>
+    {% endblock %}
 {% bootstrap_javascript jquery='full' %}
 </body>
 </html>

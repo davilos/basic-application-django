@@ -1,9 +1,8 @@
 from django.db import models
-from stdimage.models import StdImageField
-
 # SIGNALS
 from django.db.models import signals
 from django.template.defaultfilters import slugify
+from stdimage.models import StdImageField
 
 
 class Base(models.Model):

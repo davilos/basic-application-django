@@ -9,23 +9,24 @@
     {% bootstrap_css %}
 </head>
 <body>
-    <div class="container">
-        {% bootstrap_messages %}
-
-        <form name="form-users" id="formUsers" action="logar/" method="post" autocomplete="off" enctype="multipart/form-data">
+    {% block content %}
+        <form name="form-users" id="formUsers" action="/logar-conf/" method="post">
             <div class="col-6 mt-4 m-auto">
+                {% if msg %}
+                    <div class="alert {{ class }}">
+                        {{ msg }}
+                    </div>
+                {% endif %}
+
                 {% csrf_token %}
                 
                 <h1>Login</h1>
                 <input class="form-control mt-4" type="email" name="email" id="email" placeholder="Digite o e-mail:">
                 <input class="form-control mt-4" type="password" name="password" id="password" placeholder="Digite a senha:">
-
-                {% buttons %}
-                    <button type="submit" class="btn btn-primary mt-4">Logar</button>
-                {% endbuttons %}
+                <input type="submit" class="btn btn-primary mt-4" value="Logar">
             </div>
         </form>
-    </div>
+    {% endblock %}
 {% bootstrap_javascript jquery='full' %}
 </body>
 </html>

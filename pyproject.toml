@@ -34,6 +34,7 @@ soupsieve = "2.3.2.post1"
 sqlparse = "0.4.3"
 tomli = "2.0.1"
 dj-static = "^0.0.6"
+isort = "^5.10.1"
 
 
 [build-system]

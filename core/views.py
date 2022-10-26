@@ -1,17 +1,31 @@
-from django.shortcuts import render
-from .forms import ContatoForm, ProdutoModelForm
 from django.contrib import messages
-from .models import Produto
-from django.shortcuts import redirect
-from django.views.decorators.http import require_POST
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, render
+from django.views.decorators.http import require_POST
+
+from .forms import ContatoForm, ProdutoModelForm
+from .models import Produto
 
 
 def index(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('/home/')
     context = {'produtos': Produto.objects.all()}
     return render(request, 'index.html', context)
+
+
+def index_on(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect('/')
+    context = {
+        'produtos': Produto.objects.all(),
+        'msg': f'Bem-vindo, {str(request.user.username)}!',
+        'class': 'alert-dark',
+    }
+    return render(request, 'indexon.html', context)
 
 
 def contato(request):
@@ -52,39 +66,100 @@ def produto(request):
         return redirect('index')
 
 
-@require_POST
 def cadastro(request):
     if request.user.is_authenticated:
-        return redirect('index', messages.warning(request, 'Você já está cadastrado!'))
+        return HttpResponseRedirect('/')
+    return render(request, 'cadastro.html')
+
+
+@require_POST
+def cadastro_conf(request):
+    context = {}
+    confirm = [
+        request.POST['user']
+        + request.POST['email']
+        + request.POST['password']
+        + request.POST['password-conf']
+    ]
+
+    if confirm[0] == '':
+        context['msg'] = 'Insira todos os dados!'
+        context['class'] = 'alert-danger'
+        return render(request, 'cadastro.html', context)
+
     try:
         user_aux = User.objects.get(email=request.POST['email'])
 
         if user_aux:
-            return render(request, 'cadastro.html', messages.error(request, 'Já existe um usuário com este e-mail!'))
+            context['msg'] = 'Já existe um usuário com este e-mail!'
+            context['class'] = 'alert-warning'
     except User.DoesNotExist:
-        if (request.POST['password'] == request.POST['password-conf']):
-            user = User.objects.create_user(request.POST['user'], request.POST['email'], request.POST['password'])
-            user.save()
-            
-            return render(request, 'cadastro.html', messages.success(request, f'Seja bem-vindo {user.username}!'))
-        else:
-            return render(request, 'cadastro.html', messages.error(request, 'As senha não são iguais!'))
+        try:
+            if request.POST['password'] != request.POST['password-conf']:
+                context['msg'] = 'As senha não são iguais!'
+                context['class'] = 'alert-danger'
+            elif (
+                str(request.POST['password']) == ''
+                and str(request.POST['password-conf']) == ''
+            ):
+                context['msg'] = 'Insira as senhas corretamente!'
+                context['class'] = 'alert-danger'
+            elif len(str(request.POST['email'])) == 0:
+                context['msg'] = 'Insira um e-mail!'
+                context['class'] = 'alert-danger'
+            else:
+                user = User.objects.create_user(
+                    request.POST['user'],
+                    request.POST['email'],
+                    request.POST['password'],
+                )
+                user.save()
+                login(request, user)
+                return HttpResponseRedirect('/home/')
+        except ValueError:
+            context['msg'] = 'Insira um nome de usuário correto!'
+            context['class'] = 'alert-danger'
+    return render(request, 'cadastro.html', context)
+
+
+def logar(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('/home/')
+    return render(request, 'login.html')
 
 
 @require_POST
-def logar(request):
-    if request.user.is_authenticated:
-        return redirect('index', messages.warning(request, 'Você já está logado!'))
-    user_aux = User.objects.get(email=request.POST['email'])
-    user = authenticate(username=user_aux.username, password=request.POST['password'])
+def logar_conf(request):
+    context = {}
+    confirm = [request.POST['email'] + request.POST['password']]
 
-    context = {'user': user} 
-    return render(request, 'login.html', context)
-    if user is not None:
-        login(request, user)
-        return redirect('index', messages.success(request, f'Bem-vindo novamente, {str(user.username)}'))
+    if confirm[0] == '':
+        context['msg'] = 'Insira todos os dados!'
+        context['class'] = 'alert-danger'
+    elif str(request.POST['password']) == '':
+        context['msg'] = 'Insira uma senha!'
+        context['class'] = 'alert-danger'
+    elif str(request.POST['email']) == '':
+        context['msg'] = 'Insira um e-mail!'
+        context['class'] = 'alert-danger'
     else:
-         return render(request, 'login.html', messages.error(request, 'Usuário ou senha incorretos!'))
+        try:
+            user_aux = User.objects.get(email=request.POST['email'])
+            user = authenticate(
+                username=user_aux.username, password=request.POST['password']
+            )
+
+            if user is not None:
+                login(request, user)
+                return HttpResponseRedirect('/home/')
+            else:
+                context['msg'] = 'E-mail ou senha incorretos!'
+                context['class'] = 'alert-danger'
+
+        except User.DoesNotExist:
+            context['msg'] = 'Usuário não existe!'
+            context['class'] = 'alert-danger'
+    return render(request, 'login.html', context)
 
 
 @login_required

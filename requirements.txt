@@ -11,6 +11,7 @@ django-on-heroku==1.1.2
 django-stdimage==6.0.1
 flake8==4.0.1
 gunicorn==20.1.0
+isort==5.10.1
 mccabe==0.6.1
 mypy-extensions==0.4.3
 mysql==0.0.3
