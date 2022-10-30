@@ -16,9 +16,7 @@ import dj_database_url
 import django_on_heroku
 
 # Usando PostgreSQL com Heroku
-DATABASES = {
-    'default': dj_database_url.config()
-}
+DATABASES = {'default': dj_database_url.config()}
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

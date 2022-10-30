@@ -107,6 +107,14 @@ def cadastro_conf(request):
             elif len(str(request.POST['email'])) == 0:
                 context['msg'] = 'Insira um e-mail!'
                 context['class'] = 'alert-danger'
+            elif (
+                len(str(request.POST['password'])) < 8
+                and len(str(request.POST['password-conf'])) < 8
+            ):
+                context[
+                    'msg'
+                ] = 'Insira uma senha maior ou igual a 8 caracteres'
+                context['class'] = 'alert-warning'
             else:
                 user = User.objects.create_user(
                     request.POST['user'],
